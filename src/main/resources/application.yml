@@ -1,6 +1,14 @@
 spring:
   jwt:
-    secret: ${JWT_SECRET_KEY}
+    secret: ${JWT_SECRET}
+
+    access:
+      expiration: 80
+      header: Authorization
+
+    refresh:
+      expiration: 90
+      header: Authorization-refresh
   datasource:
     url: ${DB_URI}
     username: ${DB_USERNAME}
@@ -8,7 +16,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
