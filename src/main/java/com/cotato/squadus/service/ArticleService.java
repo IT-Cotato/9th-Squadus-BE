@@ -28,7 +28,8 @@ public class ArticleService {
                 .build();
         try{
             articleRepository.save(article);
-        }catch(DataIntegrityViolationException e){
+        }catch(DataIntegrityViolationException e) {
+            log.debug("Data integrity violation");
             throw new InvalidRequestStateException();
         }
     }
