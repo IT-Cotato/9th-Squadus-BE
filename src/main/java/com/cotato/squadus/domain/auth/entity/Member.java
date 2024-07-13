@@ -3,6 +3,7 @@ package com.cotato.squadus.domain.auth.entity;
 import com.cotato.squadus.domain.club.common.entity.ClubMember;
 import com.cotato.squadus.domain.auth.enums.MemberRole;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -53,4 +54,22 @@ public class Member {
 
     @OneToMany(mappedBy = "member", fetch = LAZY, cascade = ALL)
     private List<ClubMember> clubMemberships; // 가입된 동아리 리스트 확인
+
+    @Builder
+    public Member(String memberId, String username, String email, MemberRole memberRole) {
+        this.memberId = memberId;
+        this.username = username;
+        this.email = email;
+        this.memberRole = memberRole;
+    }
+
+    public Member update(String email, String name) {
+        this.email = email;
+        this.username = name;
+        return this;
+    }
+
+    public String getRoleKey(){
+        return this.memberRole.getKey();
+    }
 }
