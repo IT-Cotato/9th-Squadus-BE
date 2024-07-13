@@ -3,6 +3,7 @@ package com.cotato.squadus.common.config;
 import com.cotato.squadus.common.config.filter.CustomLogoutFilter;
 import com.cotato.squadus.common.config.filter.JWTFilter;
 import com.cotato.squadus.common.config.jwt.JWTUtil;
+import com.cotato.squadus.domain.auth.enums.MemberRole;
 import com.cotato.squadus.domain.auth.repository.RefreshRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,8 @@ public class SecurityConfig {
 
     private static final String[] WHITE_LIST = {
             "/v1/api/auth/**",
+            "/",
+            "/reissue",
     };
 
     private final AuthenticationConfiguration authenticationConfiguration;
@@ -65,7 +68,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(WHITE_LIST).permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/reissue").permitAll()
+                        .requestMatchers("/my").hasRole(MemberRole.CERTIFIED_MEMBER.name())
                         .requestMatchers("/api/v1/club/create").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
