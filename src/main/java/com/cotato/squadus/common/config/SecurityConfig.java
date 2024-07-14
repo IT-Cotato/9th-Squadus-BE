@@ -3,12 +3,15 @@ package com.cotato.squadus.common.config;
 import com.cotato.squadus.common.config.filter.CustomLogoutFilter;
 import com.cotato.squadus.common.config.filter.JWTFilter;
 import com.cotato.squadus.common.config.jwt.JWTUtil;
+import com.cotato.squadus.common.oauth2.CustomOAuth2UserService;
+import com.cotato.squadus.common.oauth2.CustomSuccessHandler;
 import com.cotato.squadus.domain.auth.enums.MemberRole;
 import com.cotato.squadus.domain.auth.repository.RefreshRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.CachingUserDetailsService;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,6 +30,7 @@ public class SecurityConfig {
             "/v1/api/auth/**",
             "/",
             "/reissue",
+            "/favicon.ico"
     };
 
     private final AuthenticationConfiguration authenticationConfiguration;
@@ -35,6 +39,8 @@ public class SecurityConfig {
 
     private final RefreshRepository refreshRepository;
 
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomSuccessHandler customSuccessHandler;
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
 
@@ -75,15 +81,14 @@ public class SecurityConfig {
 //        //JWTFilter 등록
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-        http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
-//
-//        //필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
-//        //AuthenticationManager()와 JWTUtil 인수 전달
 //        http
-//                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
-
-        //세션 설정
+//                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+        http
+                .oauth2Login((oauth2) -> oauth2
+                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+                                .userService(customOAuth2UserService))
+                        .successHandler(customSuccessHandler)
+                );
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));

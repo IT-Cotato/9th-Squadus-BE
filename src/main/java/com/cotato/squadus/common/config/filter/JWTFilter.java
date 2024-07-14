@@ -3,11 +3,13 @@ package com.cotato.squadus.common.config.filter;
 import com.cotato.squadus.common.config.jwt.JWTUtil;
 import com.cotato.squadus.api.auth.dto.CustomUserDetails;
 import com.cotato.squadus.domain.auth.entity.Member;
+import com.cotato.squadus.domain.auth.enums.MemberRole;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+@Slf4j
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
@@ -31,9 +34,10 @@ public class JWTFilter extends OncePerRequestFilter {
         // 헤더에서 access키에 담긴 토큰을 꺼냄
         String accessToken = request.getHeader("access");
 
+
         // 토큰이 없다면 다음 필터로 넘김
         if (accessToken == null) {
-            System.out.println("accessToken is null");
+            log.info("Access token is null");
             filterChain.doFilter(request, response);
 
             return;
@@ -71,10 +75,14 @@ public class JWTFilter extends OncePerRequestFilter {
         String username = jwtUtil.getUsername(accessToken);
         String role = jwtUtil.getRole(accessToken);
 
-        Member member = new Member();
-        member.setUsername(username);
-        member.setRole(role);
+        log.info("username : {} role : {}", username, role);
+
+        Member member = Member.builder()
+                .username(username)
+                .memberRole(MemberRole.MEMBER)
+                .build();
         CustomUserDetails customUserDetails = new CustomUserDetails(member);
+        log.info("customUserDetails : {}", customUserDetails);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
 

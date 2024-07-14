@@ -26,7 +26,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (userData != null) {
 
             //UserDetails에 담아서 return하면 AutneticationManager가 검증 함
-            log.info("User found with username: " + username + " and password: " + userData.getPassword());
             return new CustomUserDetails(userData);
         }
 

@@ -3,6 +3,7 @@ package com.cotato.squadus.domain.auth.service;
 
 import com.cotato.squadus.api.auth.dto.JoinRequest;
 import com.cotato.squadus.domain.auth.entity.Member;
+import com.cotato.squadus.domain.auth.enums.MemberRole;
 import com.cotato.squadus.domain.auth.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,13 +34,12 @@ public class AuthService {
             return;
         }
 
-        Member data = new Member();
+        Member member = Member.builder()
+                .username(username)
+                .memberRole(MemberRole.MEMBER)
+                .email(email)
+                .build();
 
-        data.setUsername(username);
-        data.setPassword(bCryptPasswordEncoder.encode(password));
-        data.setEmail(email);
-        data.setRole("ROLE_ADMIN");
-
-        memberRepository.save(data);
+        memberRepository.save(member);
     }
 }

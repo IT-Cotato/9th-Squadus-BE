@@ -6,19 +6,20 @@ import lombok.Getter;
 
 @Getter
 public class LoginDto {
-    private String uniqueId;
-    private String username;
+    private String memberId;
+    private String name;
     private String role;
 
     public LoginDto(Member member){
-        this.uniqueId = member.getMemberId();
-        this.username = member.getUsername();
-        this.role = member.getMemberRole().getKey();
+        this.memberId = member.getMemberId();
+        this.name = member.getUsername();
+        this.role = member.getRoleKey();
     }
 
     @Builder
-    public LoginDto(String uniqueId, String role){
-        this.uniqueId = uniqueId;
+    public LoginDto(String memberId, String name, String role){
+        this.memberId = getMemberId();
+        this.name = getName();
         this.role = role;
     }
 }

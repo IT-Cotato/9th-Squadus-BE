@@ -40,38 +40,38 @@ public class AuthController {
     }
 
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
-        Member member = memberRepository.findByUsername(loginRequest.getUsername());
+//    @PostMapping("/login")
+//    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+//        Member member = memberRepository.findByUsername(loginRequest.getUsername());
+//
+//        if (member == null || !member.getEmail().equals(loginRequest.getEmail())) {
+//            return ResponseEntity.status(401).build();
+//        }
+//
+//        String memberId = member.getMemberId();
+//        String role = member.getRoleKey();
+//        System.out.println("role = " + role);
+//
+//        //토큰 생성
+//        String access = jwtUtil.createJwt("access", memberId, role, 600000L);
+//        String refresh = jwtUtil.createJwt("refresh", memberId, role, 86400000L);
+//
+//        addRefreshEntity(memberId, refresh, 86400000L);
+//
+//        //응답 설정
+//        response.setHeader("access", access);
+//        response.setHeader("refresh", refresh);
+//        response.setStatus(HttpStatus.OK.value());
+////        LoginResponse loginResponse = new LoginResponse(access, refresh);
+//        return ResponseEntity.ok("Login Success");
+//    }
 
-        if (member == null || !member.getEmail().equals(loginRequest.getEmail())) {
-            return ResponseEntity.status(401).build();
-        }
-
-        String username = member.getUsername();
-        String role = member.getRole();
-        System.out.println("role = " + role);
-
-        //토큰 생성
-        String access = jwtUtil.createJwt("access", username, role, 600000L);
-        String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
-
-        addRefreshEntity(username, refresh, 86400000L);
-
-        //응답 설정
-        response.setHeader("access", access);
-        response.setHeader("refresh", refresh);
-        response.setStatus(HttpStatus.OK.value());
-//        LoginResponse loginResponse = new LoginResponse(access, refresh);
-        return ResponseEntity.ok("Login Success");
-    }
-
-    private void addRefreshEntity(String username, String refresh, Long expiredMs) {
+    private void addRefreshEntity(String memberId, String refresh, Long expiredMs) {
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
         RefreshEntity refreshEntity = new RefreshEntity();
-        refreshEntity.setUsername(username);
+        refreshEntity.setMemberId(memberId);
         refreshEntity.setRefresh(refresh);
         refreshEntity.setExpiration(date.toString());
 

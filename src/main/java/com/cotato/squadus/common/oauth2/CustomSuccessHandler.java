@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -18,12 +19,14 @@ import java.util.Date;
 import java.util.Iterator;
 
 @Component
+@Slf4j
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
 
     public CustomSuccessHandler(JWTUtil jwtUtil, RefreshRepository refreshRepository) {
+        log.info("CustomSuccessHandler instantiated");
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;
     }
@@ -35,20 +38,20 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //OAuth2User
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
-        String uniqueId = customUserDetails.getUniqueId();
+        String memberId = customUserDetails.getMemberId();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String access = jwtUtil.createJwt("access", uniqueId, role, 600000L);
-        String refresh = jwtUtil.createJwt("refresh", uniqueId, role, 86400000L);
+        String access = jwtUtil.createJwt("access", memberId, role, 600000L);
+        String refresh = jwtUtil.createJwt("refresh", memberId, role, 86400000L);
 
-        addRefreshEntity(uniqueId, refresh, 86400000L);
+        addRefreshEntity(memberId, refresh, 86400000L);
 
         response.setHeader("access", access);
         response.addCookie(createCookie("refresh", refresh));
-        response.sendRedirect("http://localhost:3000/");
+        response.sendRedirect("http://localhost:8080/");
     }
 
     private void addRefreshEntity(String memberId, String refresh, Long expiredMs) {

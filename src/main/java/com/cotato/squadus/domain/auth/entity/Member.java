@@ -5,6 +5,7 @@ import com.cotato.squadus.domain.auth.enums.MemberRole;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor
 @Table(name = "member")
 public class Member {
 
@@ -24,12 +25,7 @@ public class Member {
 
     private String memberId;
 
-    private String username; // 임시로 생성
-
-    private String password; // 임시로 생성
-
-    private String role; // 임시로 생성
-
+    private String username;
 
     private String email;
 

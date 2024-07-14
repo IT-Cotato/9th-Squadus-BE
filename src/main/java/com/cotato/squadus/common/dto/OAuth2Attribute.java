@@ -4,11 +4,13 @@ import com.cotato.squadus.domain.auth.entity.Member;
 import com.cotato.squadus.domain.auth.enums.MemberRole;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
 @Getter
 @Builder
+@Slf4j
 public class OAuth2Attribute {
 
     private Map<String, Object> attributes;
@@ -24,6 +26,7 @@ public class OAuth2Attribute {
         return ofNaver(attributes);
     }
 
+
     private static OAuth2Attribute ofGoogle(Map<String, Object> attributes) {
         return OAuth2Attribute.builder()
                 .name(attributes.get("name").toString())
@@ -35,6 +38,7 @@ public class OAuth2Attribute {
 
     private static OAuth2Attribute ofNaver(Map<String, Object> attributes) {
         Map<String, Object> attributesMap = (Map<String, Object>) attributes.get("response");
+        log.info(attributesMap.toString());
 
         return OAuth2Attribute.builder()
                 .name(attributesMap.get("name").toString())
