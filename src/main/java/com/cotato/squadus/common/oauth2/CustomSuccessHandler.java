@@ -45,6 +45,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String role = auth.getAuthority();
 
         String access = jwtUtil.createJwt("access", memberId, role, 600000L);
+        log.info("access token: " + access);
         String refresh = jwtUtil.createJwt("refresh", memberId, role, 86400000L);
 
         addRefreshEntity(memberId, refresh, 86400000L);
