@@ -24,7 +24,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String registrationId = userRequest.getClientRegistration().getRegistrationId(); //naver, google
+        String registrationId = userRequest.getClientRegistration().getRegistrationId(); //naver, google, kakao
         OAuth2Attribute attribute = OAuth2Attribute.of(registrationId, oAuth2User.getAttributes());
 
         String uniqueId = registrationId+" "+attribute.getProviderId();
