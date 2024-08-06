@@ -4,6 +4,8 @@ import com.cotato.squadus.api.post.dto.*;
 import com.cotato.squadus.common.error.ErrorCode;
 import com.cotato.squadus.common.error.exception.AppException;
 import com.cotato.squadus.domain.auth.service.ClubMemberService;
+import com.cotato.squadus.domain.club.common.entity.Club;
+import com.cotato.squadus.domain.club.common.repository.ClubRepository;
 import com.cotato.squadus.domain.club.post.entity.ClubPost;
 import com.cotato.squadus.domain.club.post.repository.ClubPostRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+
 @Slf4j
 @Service
 @Transactional(readOnly = true)
@@ -20,6 +23,7 @@ public class ClubPostService {
 
     private final ClubPostRepository clubPostRepository;
     private final ClubMemberService clubMemberService;
+    private final ClubRepository clubRepository;
 
     // 공지 전체 내용 조회
     public ClubPostListResponse findAllClubPostsByClubId(Long clubId) {
@@ -53,8 +57,11 @@ public class ClubPostService {
     }
 
     @Transactional
-    public ClubPostCreateResponse createClubPost(ClubPostCreateRequest clubPostCreateRequest) {
+    public ClubPostCreateResponse createClubPost(Long clubId, ClubPostCreateRequest clubPostCreateRequest) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 고유번호를 가진 동아리를 찾을 수 없습니다."));
         ClubPost clubPost = ClubPost.builder()
+                .club(club)
                 .title(clubPostCreateRequest.title())
                 .content(clubPostCreateRequest.content())
                 .image(clubPostCreateRequest.imageUrl())
