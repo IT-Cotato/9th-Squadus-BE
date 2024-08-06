@@ -1,6 +1,6 @@
 package com.cotato.squadus.domain.auth.enums;
 
-public enum MemberStatus {
+public enum Membership {
     APPLIED,
     JOINED,
     QUIT
