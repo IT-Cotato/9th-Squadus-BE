@@ -14,6 +14,7 @@ public record ClubInfoResponse(
         String sportsCategory,
         String logo,
         Integer numberOfMembers,
+        Long maxMembers,
         LocalDateTime createdAt,
         String clubMessage,
         List<String> tags
@@ -28,6 +29,7 @@ public record ClubInfoResponse(
                 club.getSportsCategory().name(),
                 club.getLogo(),
                 club.getClubMembers() != null ? club.getClubMembers().size() : 0,
+                club.getMaxMembers(),
                 club.getCreatedAt(),
                 club.getClubMessage(),
                 club.getTags()

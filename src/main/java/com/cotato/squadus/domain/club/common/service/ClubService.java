@@ -1,6 +1,7 @@
 package com.cotato.squadus.domain.club.common.service;
 
 import com.cotato.squadus.api.club.dto.*;
+import com.cotato.squadus.common.config.auth.CustomOAuth2Member;
 import com.cotato.squadus.domain.auth.repository.MemberRepository;
 import com.cotato.squadus.domain.club.common.enums.ClubTier;
 import com.cotato.squadus.domain.club.common.enums.SportsCategory;
@@ -13,6 +14,7 @@ import com.cotato.squadus.domain.auth.entity.Member;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -40,10 +42,12 @@ public class ClubService {
                 .sportsCategory(SportsCategory.valueOf(clubCreateRequest.getSportsCategory()))
                 .logo(clubCreateRequest.getLogo())
                 .clubTier(ClubTier.BRONZE)
+                .clubMessage(clubCreateRequest.getClubName() + "입니다.")
+                .maxMembers(40L)
                 .build();
 
         Club savedClub = clubRepository.save(club);
-        log.info("Club created : {}", savedClub);
+        log.info("동아리 생성됨, clubId : {}", savedClub.getClubId());
         return new ClubCreateResponse(savedClub.getClubId());
     }
 
