@@ -51,7 +51,7 @@ public class ClubPostController {
     @Operation(summary = "동아리 공지 생성", description = "동아리 공지를 하나 생성합니다")
     public ResponseEntity<ClubPostCreateResponse> createClubPost(@PathVariable Long clubId, @RequestBody ClubPostCreateRequest clubPostCreateRequest) {
         clubMemberService.validateClubMember(clubId);
-        ClubPostCreateResponse clubPostCreateResponse = clubPostService.createClubPost(clubPostCreateRequest);
+        ClubPostCreateResponse clubPostCreateResponse = clubPostService.createClubPost(clubId, clubPostCreateRequest);
         log.info("동아리 공지 작성, postId: {} ", clubPostCreateResponse);
         return ResponseEntity.ok(clubPostCreateResponse);
     }

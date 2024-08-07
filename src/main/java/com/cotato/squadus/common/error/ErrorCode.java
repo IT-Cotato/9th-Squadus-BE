@@ -42,6 +42,7 @@ public enum ErrorCode {
     ROLE_IS_NOT_MATCH(HttpStatus.BAD_REQUEST, "M-101", "해당 ROLE은 변경할 수 없습니다."),
     ROLE_IS_NOT_OLD_MEMBER(HttpStatus.BAD_REQUEST, "M-103", "해당 회원의 ROLE은 OLD_MEMBER가 아닙니다."),
     SAME_PASSWORD(HttpStatus.CONFLICT, "M-301", "이전과 같은 비밀번호로 변경할 수 없습니다."),
+    MEMBER_TYPE_IS_NOT_ADMIN(HttpStatus.BAD_REQUEST, "M-102", "해당 회원은 ADMIN 회원이 아닙니다."),
 
     // 동아리 관련
     CLUB_ACCESS_DENIED(HttpStatus.FORBIDDEN, "C-001", "해당 동아리에 접근할 수 있는 권한이 없습니다."),

@@ -1,19 +1,22 @@
 package com.cotato.squadus.domain.club.common.entity;
 import com.cotato.squadus.domain.auth.entity.Member;
-import com.cotato.squadus.domain.auth.enums.MemberStatus;
+import com.cotato.squadus.domain.auth.enums.Membership;
+import com.cotato.squadus.domain.club.common.enums.MemberType;
 import com.cotato.squadus.domain.club.schedule.entity.ScheduleComment;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.ALL;
-import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "member_type")
+@NoArgsConstructor
 @Table(name = "club_member")
 public abstract class ClubMember {
 
@@ -30,7 +33,7 @@ public abstract class ClubMember {
     private Club club;
 
     @Enumerated(EnumType.STRING)
-    private MemberStatus memberStatus;
+    private Membership membership;
 
     private Boolean isPaid;
 
@@ -39,4 +42,14 @@ public abstract class ClubMember {
 
     @OneToMany(mappedBy = "clubMember", cascade = ALL)
     private List<ScheduleComment> scheduleComments;
+
+    public abstract MemberType getMemberType();
+
+    public ClubMember(Member member, Club club, Membership membership, Boolean isPaid, String clubProfileImage) {
+        this.member = member;
+        this.club = club;
+        this.membership = membership;
+        this.isPaid = isPaid;
+        this.clubProfileImage = clubProfileImage;
+    }
 }
