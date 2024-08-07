@@ -34,6 +34,13 @@ public class Club extends BaseTimeEntity {
 
     private Integer clubRank;
 
+    private String clubMessage;
+
+    private Integer numberOfMembers;
+
+    @ElementCollection
+    private List<String> tags; // 별도의 테이블을 생성하여 컬렉션의 데이터를 저장
+
     @Enumerated(EnumType.STRING)
     private SportsCategory sportsCategory;
 

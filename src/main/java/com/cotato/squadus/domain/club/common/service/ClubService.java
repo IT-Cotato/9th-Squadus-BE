@@ -1,14 +1,11 @@
 package com.cotato.squadus.domain.club.common.service;
 
+import com.cotato.squadus.api.club.dto.*;
 import com.cotato.squadus.domain.auth.repository.MemberRepository;
 import com.cotato.squadus.domain.club.common.enums.ClubTier;
 import com.cotato.squadus.domain.club.common.enums.SportsCategory;
 import com.cotato.squadus.domain.club.common.repository.ClubApplicationRepository;
 import com.cotato.squadus.domain.club.common.repository.ClubRepository;
-import com.cotato.squadus.api.club.dto.ClubCreateRequest;
-import com.cotato.squadus.api.club.dto.ClubCreateResponse;
-import com.cotato.squadus.api.club.dto.ClubApplyRequest;
-import com.cotato.squadus.api.club.dto.ClubApplyResponse;
 import com.cotato.squadus.domain.auth.enums.ApplicationStatus;
 import com.cotato.squadus.domain.club.common.entity.Club;
 import com.cotato.squadus.domain.club.common.entity.ClubApplication;
@@ -71,6 +68,15 @@ public class ClubService {
                 .build();
         ClubApplication savedApplication = clubApplicationRepository.save(clubApplication);
         return new ClubApplyResponse(savedApplication.getApplicationIdx());
+    }
+
+    public ClubInfoResponse findClubInfo(Long clubId) {
+
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 고유번호를 가진 동아리를 찾을 수 없습니다."));
+
+        ClubInfoResponse clubInfoResponse = ClubInfoResponse.from(club);
+        return clubInfoResponse;
     }
 
 }

@@ -1,9 +1,6 @@
 package com.cotato.squadus.api.club.controller;
 
-import com.cotato.squadus.api.club.dto.ClubCreateRequest;
-import com.cotato.squadus.api.club.dto.ClubCreateResponse;
-import com.cotato.squadus.api.club.dto.ClubApplyRequest;
-import com.cotato.squadus.api.club.dto.ClubApplyResponse;
+import com.cotato.squadus.api.club.dto.*;
 import com.cotato.squadus.domain.club.common.service.ClubService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,6 +21,13 @@ public class ClubController {
     public ResponseEntity<ClubCreateResponse> createClub(@RequestBody ClubCreateRequest clubCreateRequest) {
         ClubCreateResponse clubCreateResponse = clubService.createClub(clubCreateRequest);
         return ResponseEntity.ok(clubCreateResponse);
+    }
+
+    @GetMapping("/{clubId}")
+    @Operation(summary = "동아리 기본 정보 조회", description = "clubId를 바탕으로 동아리에 대한 정보를 반환합니다.")
+    public ResponseEntity<ClubInfoResponse> findClubInfo(@PathVariable Long clubId) {
+        ClubInfoResponse clubInfoResponse = clubService.findClubInfo(clubId);
+        return ResponseEntity.ok(clubInfoResponse);
     }
 
     @PostMapping("/{clubId}")
