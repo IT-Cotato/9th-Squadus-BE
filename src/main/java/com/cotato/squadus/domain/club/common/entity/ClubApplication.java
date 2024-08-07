@@ -38,4 +38,8 @@ public class ClubApplication {
         this.appliedAt = appliedAt;
         this.applicationStatus = applicationStatus;
     }
+
+    public void updateApplicationState(ApplicationStatus status) {
+        this.applicationStatus = status;
+    }
 }
